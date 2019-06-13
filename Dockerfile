@@ -10,6 +10,7 @@ LABEL maintainer="saarg"
 RUN \
  echo "**** install build packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
+	git \
 	bzr \
 	curl \
 	gcc \
@@ -19,7 +20,6 @@ RUN \
 	make \
 	libressl-dev \
 	pcsc-lite-dev \
-	subversion \
 	tar && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
@@ -30,11 +30,11 @@ RUN \
 	pcsc-lite \
 	pcsc-lite-libs && \
  echo "**** compile oscam ****" && \
- if [ -z ${OSCAM_VERSION+x} ]; then \
-	OSCAM_VERSION=$(svn info --show-item revision http://www.streamboard.tv/svn/oscam/trunk ); \
- fi && \
- svn checkout http://www.streamboard.tv/svn/oscam/trunk@${OSCAM_VERSION} /tmp/oscam-svn && \
- cd /tmp/oscam-svn && \
+ git clone https://github.com/oscam-emu/oscam-patched.git /tmp/oscam-emu && \
+ cd /tmp/oscam-emu && \
+ git fetch --tags && \
+ latestTag=$(git describe --tags `git rev-list --tags --max-count=1`) && \
+ git checkout $(git tag -l | tail -1) && \
  ./config.sh \
 	--enable all \
 	--disable \
