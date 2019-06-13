@@ -33,7 +33,6 @@ RUN \
  git clone https://github.com/oscam-emu/oscam-patched.git /tmp/oscam-emu && \
  cd /tmp/oscam-emu && \
  git fetch --tags && \
- latestTag=$(git describe --tags `git rev-list --tags --max-count=1`) && \
  git checkout $(git tag -l | tail -1) && \
  ./config.sh \
 	--enable all \
